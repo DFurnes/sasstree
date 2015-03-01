@@ -1,0 +1,19 @@
+{
+  "name": "sasstree",
+  "version": "0.0.1",
+  "description": "A Sass parser built in JavaScript.",
+  "main": "lib/SassTree.js",
+  "scripts": {
+    "start": "node bootstrap.js",
+    "build": "babel src --out-dir lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Furnes <david@dfurnes.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "^4.6.1",
+    "gulp": "^3.8.11",
+    "gulp-bench": "^1.1.0",
+    "lodash": "^3.3.1"
+  }
+}

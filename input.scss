@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+/**
+ * A multi-line
+ * comment string.
+ */
+.thing {
+    width: 100%;
+    height: 178px; // who wrote this shit
+    position: absolute;
+
+    .child {
+      color: red;
+    }
+}
+
+.thing:before {
+    content: 'Hi!';
+}
