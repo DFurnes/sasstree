@@ -120,39 +120,39 @@ class Tokenizer {
                     break;
 
                 case TOKENS.colon:
-                    this.pushCharacterToken('COLON', ':');
+                    this.pushCharacterToken('COLON', char);
                     break;
 
                 case TOKENS.semicolon:
-                    this.pushCharacterToken('SEMICOLON', ';');
+                    this.pushCharacterToken('SEMICOLON', char);
                     break;
 
                 case TOKENS.comma:
-                    this.pushCharacterToken('COMMA', ',');
+                    this.pushCharacterToken('COMMA', char);
                     break;
 
                 case TOKENS.openBracket:
-                    this.pushCharacterToken('[', '[');
+                    this.pushCharacterToken('OPEN_BRACKET', char);
                     break;
 
                 case TOKENS.closeBracket:
-                    this.pushCharacterToken(']', ']');
+                    this.pushCharacterToken('CLOSE_BRACKET', char);
                     break;
 
                 case TOKENS.openCurlyBracket:
-                    this.pushCharacterToken('{', '{');
+                    this.pushCharacterToken('OPEN_CURLY', char);
                     break;
 
                 case TOKENS.closeCurlyBracket:
-                    this.pushCharacterToken('}', '}');
+                    this.pushCharacterToken('CLOSE_CURLY', char);
                     break;
 
                 case TOKENS.openParen:
-                    this.pushCharacterToken('(', '(');
+                    this.pushCharacterToken('OPEN_PAREN', char);
                     break;
 
                 case TOKENS.closeParen:
-                    this.pushCharacterToken(')', ')');
+                    this.pushCharacterToken('CLOSE_PAREN', char);
                     break;
 
                 case TOKENS.singleQuote:
@@ -161,51 +161,51 @@ class Tokenizer {
                     break;
 
                 case TOKENS.exponent:
-                    this.pushCharacterToken('EXPONENT', '^');
+                    this.pushCharacterToken('EXPONENT', char);
                     break;
 
                 case TOKENS.dash:
-                    this.pushCharacterToken('DASH', '-');
+                    this.pushCharacterToken('DASH', char);
                     break;
 
                 case TOKENS.bang:
-                    this.pushCharacterToken('BANG', '!');
+                    this.pushCharacterToken('BANG', char);
                     break;
 
                 case TOKENS.percent:
-                    this.pushCharacterToken('PERCENT', '%');
+                    this.pushCharacterToken('PERCENT', char);
                     break;
 
                 case TOKENS.atSymbol:
-                    this.pushCharacterToken('AT', '@');
+                    this.pushCharacterToken('AT', char);
                     break;
 
                 case TOKENS.hash:
-                    this.pushCharacterToken('HASH', '#');
+                    this.pushCharacterToken('HASH', char);
                     break;
 
                 case TOKENS.plus:
-                    this.pushCharacterToken('PLUS', '+');
+                    this.pushCharacterToken('PLUS', char);
                     break;
 
                 case TOKENS.tilde:
-                    this.pushCharacterToken('TILDE', '~');
+                    this.pushCharacterToken('TILDE', char);
                     break;
 
                 case TOKENS.equals:
-                    this.pushCharacterToken('EQUAL', '=');
+                    this.pushCharacterToken('EQUAL', char);
                     break;
 
                 case TOKENS.greaterThan:
-                    this.pushCharacterToken('GREATER_THAN', '>');
+                    this.pushCharacterToken('GREATER_THAN', char);
                     break;
 
                 case TOKENS.period:
-                    this.pushCharacterToken('PERIOD', '.');
+                    this.pushCharacterToken('PERIOD', char);
                     break;
 
                 case TOKENS.asterisk:
-                    this.pushCharacterToken('ASTERISK', '*');
+                    this.pushCharacterToken('ASTERISK', char);
                     break;
 
                 default:
@@ -222,7 +222,7 @@ class Tokenizer {
                     }
 
                     if(char === '/') {
-                        this.pushCharacterToken('FORWARD_SLASH', '/');
+                        this.pushCharacterToken('FORWARD_SLASH', char);
                         break;
                     }
 
