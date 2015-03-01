@@ -17,8 +17,7 @@ const input = fs.readFileSync(__dirname + '/../input.scss', 'utf-8');
 let ast = parser.parse(input);
 
 // Print the token list.
-console.log(ast);
-console.log('\n\n\n');
+console.log(ast[0].children);
 
 // Mirror out the things we understood.
 ast.forEach(function(element) {
