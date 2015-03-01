@@ -1,9 +1,8 @@
 require("babel/register");
 
 var fs = require('fs');
-var Parser = require('../lib/parser');
+var Parser = require('../src/Parser');
 var parser = new Parser();
-
 
 // Read input.
 var input = fs.readFileSync(__dirname + '/../input.scss', 'utf-8');
