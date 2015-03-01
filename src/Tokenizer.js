@@ -127,6 +127,18 @@ class Tokenizer {
                     this.pushCharacterToken('SEMICOLON', ';');
                     break;
 
+                case TOKENS.comma:
+                    this.pushCharacterToken('COMMA', ',');
+                    break;
+
+                case TOKENS.openBracket:
+                    this.pushCharacterToken('[', '[');
+                    break;
+
+                case TOKENS.closeBracket:
+                    this.pushCharacterToken(']', ']');
+                    break;
+
                 case TOKENS.openCurlyBracket:
                     this.pushCharacterToken('{', '{');
                     break;
@@ -145,7 +157,19 @@ class Tokenizer {
 
                 case TOKENS.singleQuote:
                 case TOKENS.doubleQuote:
-                    this.pushCharacterToken('QUOTE', char);
+                    this.tokenizeQuotedString();
+                    break;
+
+                case TOKENS.exponent:
+                    this.pushCharacterToken('EXPONENT', '^');
+                    break;
+
+                case TOKENS.dash:
+                    this.pushCharacterToken('DASH', '-');
+                    break;
+
+                case TOKENS.bang:
+                    this.pushCharacterToken('BANG', '!');
                     break;
 
                 case TOKENS.percent:
@@ -154,6 +178,26 @@ class Tokenizer {
 
                 case TOKENS.atSymbol:
                     this.pushCharacterToken('AT', '@');
+                    break;
+
+                case TOKENS.hash:
+                    this.pushCharacterToken('HASH', '#');
+                    break;
+
+                case TOKENS.plus:
+                    this.pushCharacterToken('PLUS', '+');
+                    break;
+
+                case TOKENS.tilde:
+                    this.pushCharacterToken('TILDE', '~');
+                    break;
+
+                case TOKENS.equals:
+                    this.pushCharacterToken('EQUAL', '=');
+                    break;
+
+                case TOKENS.greaterThan:
+                    this.pushCharacterToken('GREATER_THAN', '>');
                     break;
 
                 case TOKENS.period:
@@ -169,21 +213,35 @@ class Tokenizer {
                     let nextChar = string.charAt(this.pos + 1);
                     if(char === '/' && nextChar === '*') {
                         this.tokenizeMultilineComment();
+                        break;
                     }
 
                     if(char === '/' && nextChar === '/') {
                         this.tokenizeComment();
+                        break;
+                    }
+
+                    if(char === '/') {
+                        this.pushCharacterToken('FORWARD_SLASH', '/');
+                        break;
+                    }
+
+                    if(char === '\\' && nextChar === '9') {
+                        this.pushCharacterToken('HACK', char + nextChar);
+                        break;
                     }
 
                     if(char.match(/[A-Za-z]/)) {
                         this.tokenizeWord();
+                        break;
                     }
 
                     if(char.match(/[0-9]/)) {
                         this.tokenizeInteger();
+                        break;
                     }
 
-                    //console.log('UNTOKENIZED CHARACTER ---> ' + string.charAt(pos));
+                    console.error(`Unrecognized token at ${this.line}:${this.pos - this.offset} --> ${this.string.charAt(this.pos)}`);
 
                     break;
             }
@@ -222,7 +280,7 @@ class Tokenizer {
             _pos, _offset, _line
         );
 
-        this.pos = next;
+        this.pos = next + 1;
     }
 
     /**
@@ -276,6 +334,24 @@ class Tokenizer {
 
         this.pushCharacterToken('WORD', this.string.slice(this.pos, next));
         this.pos = next - 1;
+    }
+
+    /**
+     * Find quoted string tokens.
+     */
+    tokenizeQuotedString() {
+        let openingQuote = this.string.charAt(this.pos);
+        let next = this.pos;
+        let char, prevChar;
+
+        do {
+            next++;
+            char = this.string.charAt(next);
+            prevChar = this.string.charAt(next - 1);
+        } while (!(char === openingQuote && prevChar !== '\\'));
+
+        this.pushCharacterToken('STRING', this.string.slice(this.pos, next + 1));
+        this.pos = next;
     }
 
     /**

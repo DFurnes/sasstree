@@ -26,13 +26,24 @@ export default {
 
     // Separators
     colon: ':',
+    comma: ',',
     semicolon: ';',
+    dash: '-',
 
     // Symbols
-    percent: '%',
+    asterisk: '*',
     atSymbol: '@',
+    bang: '!',
+    equals: '=',
+    exponent: '^',
+    greaterThan: '>',
+    hash: '#',
+    percent: '%',
     period: '.',
-    asterisk: '*'
+    plus: '+',
+    backSlash: '\\',
+    forwardSlash: '/',
+    tilde: '~'
 
 };
 

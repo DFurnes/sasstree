@@ -22,7 +22,7 @@ console.log('\n\n\n');
 
 // Mirror out the things we understood.
 ast.forEach(function(element) {
-   process.stdout.write(element.lexeme);
+   //process.stdout.write(element.lexeme);
 });
 
 console.log("*mic drop*");
