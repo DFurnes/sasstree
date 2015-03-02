@@ -1,5 +1,3 @@
-// Utility functions:
-
 import TOKENS from './Tokens';
 
 /**

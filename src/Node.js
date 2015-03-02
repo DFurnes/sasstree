@@ -1,3 +1,8 @@
+/**
+ * @class Node
+ *
+ * This is the base class for all AST nodes.
+ */
 class Node {
     constructor(type, content, map) {
         this.type = type;

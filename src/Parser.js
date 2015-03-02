@@ -1,25 +1,40 @@
-/**
- * The parser analyzes the semantics of the tokens passed from
- * the tokenizer, and builds an AST that linters can use.
- */
-
 import Tokenizer from './Tokenizer';
 import Node from './Node';
 
+/**
+ * @class Parser
+ *
+ * The parser analyzes the the tokens passed from the tokenizer,
+ * and builds an abstract syntax tree (AST) that linters can use.
+ */
 class Parser {
     constructor() {
+        /**
+         * The tokens passed from the Tokenizer.
+         * @type {Array}
+         */
         this.tokens = [];
+
+        /**
+         * The AST. This is where we store AST nodes as we construct the tree.
+         * @type {Array}
+         */
         this.ast = [];
 
+        // Create a document root node.
         var root = new Node('DocumentRoot', '', null);
         this.ast.push(root);
 
         /**
-         * Current position in the AST... this is where we add child nodes to.
+         * Marks the current position in the AST. This is where we add child nodes to.
          * @type {Node}
          */
         this.current = root;
 
+        /**
+         * The last node that was added to the tree.
+         * @type {Node}
+         */
         this.latest = root;
 
         /**
@@ -31,15 +46,15 @@ class Parser {
 
     /**
      * Parse an array of tokens.
-     * @param css
+     * @param {string} scss
      */
-    parse(css) {
+    parse(scss) {
         // Start a new tokenizer
         var tokenizer = new Tokenizer();
 
         console.time('tokenize');
-        // If given a string, parse into an array of tokens. Otherwise copy, and continue.
-        this.tokens = Array.isArray(css) ? css.slice() : tokenizer.tokenize(css);
+        // Use the Tokenizer to parse SCSS string into an array of tokens.
+        this.tokens = tokenizer.tokenize(scss);
         console.timeEnd('tokenize');
 
         console.time('parse');
@@ -54,8 +69,8 @@ class Parser {
     }
 
     nextToken() {
-        this.pos++;
         if(this.pos === this.tokens.length) return false;
+        this.pos++;
 
         return this.tokens[this.pos];
     }
@@ -82,9 +97,13 @@ class Parser {
 
     }
 
-    addNode(rule) {
-        this.current.attachChild(rule);
-        this.latest = rule;
+    /**
+     * Attach a child to the current node & set as latest.
+     * @param node
+     */
+    addNode(node) {
+        this.current.attachChild(node);
+        this.latest = node;
     }
 
     /**

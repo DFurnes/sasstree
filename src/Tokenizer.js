@@ -1,13 +1,12 @@
-/**
- * The tokenizer breaks string input into a series of tokens, which
- * it passes off to the parser.
- */
-
 import TOKENS from "./Tokens";
 import { isWhitespace } from "./util";
 
-// http://www.w3.org/TR/css3-syntax/#tokenization
-
+/**
+ * @class Tokenizer
+ *
+ * The tokenizer breaks string input into a series of tokens (lexical
+ * analysis), which it passes off to the parser.
+ */
 class Tokenizer {
 
     constructor() {
