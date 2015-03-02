@@ -81,7 +81,7 @@ class Tokenizer {
      * @returns {*}
      */
     nextChar(string) {
-        if(this.pos == string.length) return false;
+        if(this.pos === string.length) return false;
 
         return string.charAt(this.pos);
     }
