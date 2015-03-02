@@ -3,11 +3,13 @@ class Node {
         this.type = type;
         this.content = content;
         this.map = map;
-
-        this.children = [];
     }
 
     attachChild(child) {
+        if(!this.children) {
+            this.children = [];
+        }
+
         this.children.push(child);
     }
 }
