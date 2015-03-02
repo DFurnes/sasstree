@@ -70,9 +70,9 @@ class Parser {
                 this.attachWhitespace(token.lexeme);
                 break;
 
-            //case 'AT':
-            //    this.parseAtRule();
-            //    break;
+            case 'AT':
+                this.parseAtRule(token);
+                break;
 
             default:
                 var node = new Node(token.type, token.lexeme, token.source);
@@ -97,8 +97,19 @@ class Parser {
     /**
      * Attempt to parse an at-rule node.
      */
-    parseAtRule() {
-        // no-op for now...
+    parseAtRule(token) {
+        var node = new Node('AT-RULE', token.lexeme, token.source);
+
+        let next = this.nextToken();
+        if(next.type === 'WORD') {
+            node.content = next.lexeme;
+        }
+
+        /**
+         * @TODO Parse value, block of child nodes, & semicolon.
+         */
+
+        this.addNode(node);
     }
 
 
