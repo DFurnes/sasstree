@@ -34,6 +34,7 @@ export default {
     asterisk: '*',
     atSymbol: '@',
     bang: '!',
+    dollar: '$',
     equals: '=',
     exponent: '^',
     greaterThan: '>',

@@ -172,6 +172,10 @@ class Tokenizer {
                     this.pushCharacterToken('BANG', char);
                     break;
 
+                case TOKENS.dollar:
+                    this.pushCharacterToken('DOLLAR', char);
+                    break;
+
                 case TOKENS.percent:
                     this.pushCharacterToken('PERCENT', char);
                     break;
