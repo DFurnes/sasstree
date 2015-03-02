@@ -37,14 +37,18 @@ class Parser {
         // Start a new tokenizer
         var tokenizer = new Tokenizer();
 
+        console.time('tokenize');
         // If given a string, parse into an array of tokens. Otherwise copy, and continue.
         this.tokens = Array.isArray(css) ? css.slice() : tokenizer.tokenize(css);
+        console.timeEnd('tokenize');
 
+        console.time('parse');
         //Loop through tokens & parse.
-        let token, rule;
+        let token;
         while(token = this.next()) {
             this.parseToken(token);
         }
+        console.timeEnd('parse');
 
         return this.ast;
     }
@@ -65,6 +69,10 @@ class Parser {
                 this.attachWhitespace(token.lexeme);
                 break;
 
+            //case 'AT':
+            //    this.parseAtRule();
+            //    break;
+
             default:
                 var node = new Node(token.type, token.lexeme, token.source);
                 this.addNode(node);
@@ -82,11 +90,7 @@ class Parser {
      * Attach whitespace to previous rule.
      */
     attachWhitespace(whitespace) {
-        if(this.latest) {
-            this.latest.after = whitespace;
-        } else {
-            console.error('Can\'t attach whitespace!');
-        }
+        this.latest.after = whitespace;
     }
 
     /**
