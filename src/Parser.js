@@ -76,7 +76,10 @@ class Parser {
     }
 
     prev() {
-        // @TODO
+        if(this.pos === 0) return false;
+        this.pos--;
+
+        return this.tokens[this.pos];
     }
 
     parseToken(token) {
