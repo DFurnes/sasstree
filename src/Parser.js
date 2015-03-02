@@ -23,10 +23,10 @@ class Parser {
         this.latest = root;
 
         /**
-         * Current token being consumed.
-         * @type {null}
+         * Index of the current token being consumed.
+         * @type {number}
          */
-        this.pos = null;
+        this.pos = -1;
     }
 
     /**
@@ -45,7 +45,7 @@ class Parser {
         console.time('parse');
         //Loop through tokens & parse.
         let token;
-        while(token = this.next()) {
+        while(token = this.nextToken()) {
             this.parseToken(token);
         }
         console.timeEnd('parse');
@@ -53,14 +53,15 @@ class Parser {
         return this.ast;
     }
 
-    next() {
-        this.pos = this.tokens.shift();
-        return this.pos;
+    nextToken() {
+        this.pos++;
+        if(this.pos === this.tokens.length) return false;
+
+        return this.tokens[this.pos];
     }
 
     prev() {
         // @TODO
-        this.tokens.unshift(this.current);
     }
 
     parseToken(token) {
