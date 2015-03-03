@@ -191,7 +191,7 @@ class Tokenizer {
                     break;
 
                 case TOKENS.atSymbol:
-                    this.pushCharacterToken('AT', '@');
+                    this.tokenizeAtSymbol();
                     break;
 
                 case TOKENS.hash:
@@ -366,6 +366,22 @@ class Tokenizer {
 
         this.pushCharacterToken('STRING', this.string.slice(this.pos, next + 1));
         this.pos = next;
+    }
+
+    /**
+     * Tokenize an at-word symbol.
+     */
+    tokenizeAtSymbol() {
+        let next = this.pos;
+        let char;
+
+        do {
+            next++;
+            char = this.string.charCodeAt(next);
+        } while (!(isWhitespace(char) || char == TOKENS.openParen || char == TOKENS.closeParen));
+
+        this.pushCharacterToken('AT', this.string.slice(this.pos, next));
+        this.pos = next - 1;
     }
 
     /**

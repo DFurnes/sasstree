@@ -137,14 +137,7 @@ class Parser {
      */
     parseAtRule(token) {
         var node = new Node('AtRule', token.source);
-
-        let next = this.nextToken();
-        if(next.type === 'WORD') {
-            node.rule = next.lexeme;
-        } else {
-            this.throwException(next, 'WORD');
-        }
-
+        node.rule = token.lexeme;
 
         this.addNode(node);
 
@@ -159,8 +152,17 @@ class Parser {
                 node.between = child.lexeme;
             } else if(child.type === 'STRING') {
                 node.value += child.lexeme;
+            } else if(child.type === 'DASH') {
+                node.value += child.lexeme;
+            } else if(child.type === 'COLON') {
+                node.value += child.lexeme;
+            } else if(child.type === 'COMMA') {
+                node.value += child.lexeme;
+            } else if(child.type === 'WORD') {
+                node.value += child.lexeme;
             } else if(child.type === 'OPEN_CURLY') {
                 this.parseBlock(child);
+                break;
             } else if (child.type === 'OPEN_PAREN') {
                 node.value += '(';
             } else if (child.type === 'CLOSE_PAREN') {
@@ -169,6 +171,7 @@ class Parser {
                 node.after = ';';
                 break;
             } else {
+                console.log(node);
                 this.throwException(child);
             }
         }
