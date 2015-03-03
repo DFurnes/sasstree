@@ -1,3 +1,5 @@
+import { clone } from 'lodash';
+
 /**
  * @class Node
  *
@@ -25,6 +27,18 @@ class Node {
         }
 
         this.children.push(child);
+    }
+
+    toJSON() {
+        var copy = clone(this);
+        var type = copy.type;
+
+        delete copy.type;
+        delete copy.source;
+
+        return {
+            [type]: copy
+        };
     }
 }
 
