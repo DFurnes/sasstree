@@ -5,17 +5,17 @@
  * comment string.
  */
 .thing {
-    width: 100%;
-    height: 178px; // who wrote this shit
-    position: absolute;
+  position: absolute;
+  width: 100%;
+  height: 178px; // who wrote this shit
 
-    .child {
-      color: red;
-    }
+  .child {
+    color: red;
+  }
 }
 
 .thing:before {
-    content: 'Hi!';
+  content: 'Hi!';
 }
 
 @media("screen") {
