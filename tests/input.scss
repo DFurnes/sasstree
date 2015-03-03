@@ -10,10 +10,16 @@
     position: absolute;
 
     .child {
-      color: red !important;
+      color: red;
     }
 }
 
 .thing:before {
     content: 'Hi!';
+}
+
+@media("screen") {
+  .thing {
+    color: blue !important;
+  }
 }

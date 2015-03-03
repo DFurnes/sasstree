@@ -1,5 +1,3 @@
-import { getCharCode } from './util';
-
 /**
  * @module Tokens
  * Token characters for the tokenizer.

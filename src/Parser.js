@@ -92,6 +92,17 @@ class Parser {
                 this.parseAtRule(token);
                 break;
 
+            case 'PERIOD':
+            case 'HASH':
+            case 'WORD':
+                this.parseRule(token);
+                break;
+
+            case 'MULTILINE_COMMENT':
+            case 'COMMENT':
+                this.parseComment(token);
+                break;
+
             default:
                 var node = new Node(token.type, token.source);
                 node.setContent(token.lexeme);
@@ -110,29 +121,152 @@ class Parser {
         this.latest = node;
     }
 
+    setCurrentParent(node) {
+        this.current = node;
+    }
+
     /**
      * Attach whitespace to previous rule.
      */
     attachWhitespace(whitespace) {
-        this.latest.after = whitespace;
+        this.latest.after += whitespace;
     }
 
     /**
      * Attempt to parse an at-rule node.
      */
     parseAtRule(token) {
-        var node = new Node('AT-RULE', token.lexeme, token.source);
+        var node = new Node('AtRule', token.source);
 
         let next = this.nextToken();
         if(next.type === 'WORD') {
-            node.content = next.lexeme;
+            node.rule = next.lexeme;
+        } else {
+            this.throwException(next, 'WORD');
         }
 
-        /**
-         * @TODO Parse value, block of child nodes, & semicolon.
-         */
 
         this.addNode(node);
+
+        let _prevParent = this.current;
+        this.setCurrentParent(node);
+
+        node.value = '';
+
+        let child;
+        while(child = this.nextToken()) {
+            if(child.type === 'WHITESPACE') {
+                node.between = child.lexeme;
+            } else if(child.type === 'STRING') {
+                node.value += child.lexeme;
+            } else if(child.type === 'OPEN_CURLY') {
+                this.parseBlock(child);
+            } else if (child.type === 'OPEN_PAREN') {
+                node.value += '(';
+            } else if (child.type === 'CLOSE_PAREN') {
+                node.value += ')';
+            } else if (child.type === 'SEMICOLON') {
+                node.after = ';';
+                break;
+            } else {
+                this.throwException(child);
+            }
+        }
+
+        this.setCurrentParent(_prevParent);
+    }
+
+    /**
+     * Attempt to parse a rule node.
+     */
+    parseRule(token) {
+        var node = new Node('Rule', token.source);
+        this.addNode(node);
+
+
+        this.prev();
+        let _text = '';
+
+        let next;
+        while (next = this.nextToken()) {
+
+            if(next.type === 'OPEN_CURLY') {
+                let _prevParent = this.current;
+                this.setCurrentParent(node);
+
+                this.parseBlock(next);
+
+                this.setCurrentParent(_prevParent);
+
+                break;
+
+            } else if(next.type === 'SEMICOLON') {
+                node.type = 'Declaration';
+                node.after += ';';
+                break;
+            } else {
+                _text += next.lexeme;
+            }
+        }
+
+        node.value = _text;
+
+    }
+
+    /**
+     * Parse a block "{ ... }".
+     * @param token
+     */
+    parseBlock(token) {
+        var node = new Node('Block', token.source);
+        this.addNode(node);
+
+        let _prevParent = this.current;
+        this.setCurrentParent(node);
+
+        let child;
+        while(child = this.nextToken()) {
+            if(child.type === 'CLOSE_CURLY') {
+                break;
+            } else if(child.type === 'OPEN_CURLY') {
+                this.parseBlock(child);
+            } else {
+                this.parseToken(child);
+            }
+        }
+
+        this.setCurrentParent(_prevParent);
+    }
+
+    /**
+     * Parse comment token into an AST node.
+     * @param token
+     */
+    parseComment(token) {
+        var node = new Node('Comment', token.source);
+        this.addNode(node);
+
+        node.multiline = (token.type === 'MULTILINE_COMMENT');
+        node.content = token.lexeme;
+    }
+
+    /**
+     * Throw an exception when the parser finds an unexpected token.
+     * @TODO: This could use some friendlier reporting.
+     * @param token
+     */
+    throwException(token, expected) {
+        function ParserException() {
+            this.name = 'ParserException';
+            this.message = `Unexpected input token ${token.type} at ${token.source.line}:${token.source.column}.`;
+
+            if(expected) {
+                this.message += ` Expected ${expected}.`
+            }
+
+        }
+
+        throw new ParserException();
     }
 
 
