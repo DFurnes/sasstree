@@ -1,4 +1,4 @@
-# SassTree
+# SassTree ![NPM Version](https://img.shields.io/npm/v/sasstree.svg)
 
 :construction: __Under construction! Not ready for public use.__ :construction:
 
