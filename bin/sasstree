@@ -1,8 +1,16 @@
 #!/usr/bin/env node
-require('babel/register');
 var fs = require('fs');
 var path = require('path');
-var Parser = require('../src/Parser');
+
+var Parser;
+
+// Determine whether to load src through Babel transpiler, or use pre-built version.
+if(fs.existsSync(path.join(__dirname, '..', 'lib/Parser.js'))) {
+    Parser = require('../lib/Parser');
+} else {
+    require('babel/register');
+    Parser = require('../src/Parser');
+}
 
 var parser = new Parser();
 
