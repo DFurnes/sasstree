@@ -4,10 +4,13 @@
  * This is the base class for all AST nodes.
  */
 class Node {
-    constructor(type, content, map) {
+    constructor(type, map) {
         this.type = type;
-        this.content = content;
         this.map = map;
+    }
+
+    setContent(content) {
+        this.content = content;
     }
 
     attachChild(child) {

@@ -93,7 +93,8 @@ class Parser {
                 break;
 
             default:
-                var node = new Node(token.type, token.lexeme, token.source);
+                var node = new Node(token.type, token.source);
+                node.setContent(token.lexeme);
                 this.addNode(node);
                 break;
         }
