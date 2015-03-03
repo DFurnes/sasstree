@@ -1,5 +1,5 @@
 import TOKENS from "./Tokens";
-import { isWhitespace } from "./util";
+import { isWhitespace, isNewline, isLetter, isDigit } from "./util";
 
 /**
  * @class Tokenizer
@@ -10,6 +10,12 @@ import { isWhitespace } from "./util";
 class Tokenizer {
 
     constructor() {
+        /**
+         * The string being tokenized.
+         * @type {string}
+         */
+        this.string = '';
+
         /**
          * The tokens!
          * @type {Array}
@@ -56,6 +62,9 @@ class Tokenizer {
      * Add a multi-character token to the tokens array.
      * @param token
      * @param lexeme
+     * @param startPos
+     * @param startOffset
+     * @param startLine
      */
     pushBlockToken(token, lexeme, startPos, startOffset, startLine) {
         this.tokens.push({
@@ -64,11 +73,13 @@ class Tokenizer {
             source: {
                 start: {
                     line: startLine,
-                    column: startPos - startOffset
+                    column: startPos - startOffset,
+                    offset: startOffset
                 },
                 end: {
                     line: this.line,
-                    column: this.pos - this.offset
+                    column: this.pos - this.offset,
+                    offset: this.offset
                 }
             }
         });
@@ -82,7 +93,7 @@ class Tokenizer {
     nextChar(string) {
         if(this.pos === string.length) return false;
 
-        return string.charAt(this.pos);
+        return string.charCodeAt(this.pos);
     }
 
     /**
@@ -119,39 +130,39 @@ class Tokenizer {
                     break;
 
                 case TOKENS.colon:
-                    this.pushCharacterToken('COLON', char);
+                    this.pushCharacterToken('COLON', ':');
                     break;
 
                 case TOKENS.semicolon:
-                    this.pushCharacterToken('SEMICOLON', char);
+                    this.pushCharacterToken('SEMICOLON', ';');
                     break;
 
                 case TOKENS.comma:
-                    this.pushCharacterToken('COMMA', char);
+                    this.pushCharacterToken('COMMA', ',');
                     break;
 
                 case TOKENS.openBracket:
-                    this.pushCharacterToken('OPEN_BRACKET', char);
+                    this.pushCharacterToken('OPEN_BRACKET', '[');
                     break;
 
                 case TOKENS.closeBracket:
-                    this.pushCharacterToken('CLOSE_BRACKET', char);
+                    this.pushCharacterToken('CLOSE_BRACKET', ']');
                     break;
 
                 case TOKENS.openCurlyBracket:
-                    this.pushCharacterToken('OPEN_CURLY', char);
+                    this.pushCharacterToken('OPEN_CURLY', '{');
                     break;
 
                 case TOKENS.closeCurlyBracket:
-                    this.pushCharacterToken('CLOSE_CURLY', char);
+                    this.pushCharacterToken('CLOSE_CURLY', '}');
                     break;
 
                 case TOKENS.openParen:
-                    this.pushCharacterToken('OPEN_PAREN', char);
+                    this.pushCharacterToken('OPEN_PAREN', '(');
                     break;
 
                 case TOKENS.closeParen:
-                    this.pushCharacterToken('CLOSE_PAREN', char);
+                    this.pushCharacterToken('CLOSE_PAREN', ')');
                     break;
 
                 case TOKENS.singleQuote:
@@ -160,86 +171,86 @@ class Tokenizer {
                     break;
 
                 case TOKENS.exponent:
-                    this.pushCharacterToken('EXPONENT', char);
+                    this.pushCharacterToken('EXPONENT', '^');
                     break;
 
                 case TOKENS.dash:
-                    this.pushCharacterToken('DASH', char);
+                    this.pushCharacterToken('DASH', '-');
                     break;
 
                 case TOKENS.bang:
-                    this.pushCharacterToken('BANG', char);
+                    this.pushCharacterToken('BANG', '!');
                     break;
 
                 case TOKENS.dollar:
-                    this.pushCharacterToken('DOLLAR', char);
+                    this.pushCharacterToken('DOLLAR', '$');
                     break;
 
                 case TOKENS.percent:
-                    this.pushCharacterToken('PERCENT', char);
+                    this.pushCharacterToken('PERCENT', '%');
                     break;
 
                 case TOKENS.atSymbol:
-                    this.pushCharacterToken('AT', char);
+                    this.pushCharacterToken('AT', '@');
                     break;
 
                 case TOKENS.hash:
-                    this.pushCharacterToken('HASH', char);
+                    this.pushCharacterToken('HASH', '#');
                     break;
 
                 case TOKENS.plus:
-                    this.pushCharacterToken('PLUS', char);
+                    this.pushCharacterToken('PLUS', '+');
                     break;
 
                 case TOKENS.tilde:
-                    this.pushCharacterToken('TILDE', char);
+                    this.pushCharacterToken('TILDE', '~');
                     break;
 
                 case TOKENS.equals:
-                    this.pushCharacterToken('EQUAL', char);
+                    this.pushCharacterToken('EQUAL', '=');
                     break;
 
                 case TOKENS.greaterThan:
-                    this.pushCharacterToken('GREATER_THAN', char);
+                    this.pushCharacterToken('GREATER_THAN', '>');
                     break;
 
                 case TOKENS.period:
-                    this.pushCharacterToken('PERIOD', char);
+                    this.pushCharacterToken('PERIOD', '.');
                     break;
 
                 case TOKENS.asterisk:
-                    this.pushCharacterToken('ASTERISK', char);
+                    this.pushCharacterToken('ASTERISK', '*');
                     break;
 
                 default:
                     // Parse comments first by halting on '/*' or '//'
-                    let nextChar = string.charAt(this.pos + 1);
-                    if(char === '/' && nextChar === '*') {
+                    let nextChar = string.charCodeAt(this.pos + 1);
+                    if(char === TOKENS.forwardSlash && nextChar === TOKENS.asterisk) {
                         this.tokenizeMultilineComment();
                         break;
                     }
 
-                    if(char === '/' && nextChar === '/') {
+                    if(char === TOKENS.forwardSlash && nextChar === TOKENS.forwardSlash) {
                         this.tokenizeComment();
                         break;
                     }
 
-                    if(char === '/') {
+                    if(char === TOKENS.forwardSlash) {
                         this.pushCharacterToken('FORWARD_SLASH', char);
                         break;
                     }
 
-                    if(char === '\\' && nextChar === '9') {
-                        this.pushCharacterToken('HACK', char + nextChar);
+                    if(char === TOKENS.backSlash && nextChar === TOKENS.nine) {
+                        this.pushCharacterToken('HACK', '\\9');
                         break;
                     }
 
-                    if(char.match(/[A-Za-z]/)) {
+                    if(isLetter(char)) {
                         this.tokenizeWord();
                         break;
                     }
 
-                    if(char.match(/[0-9]/)) {
+                    if(isDigit(char)) {
                         this.tokenizeInteger();
                         break;
                     }
@@ -268,14 +279,14 @@ class Tokenizer {
 
         do {
             next++;
-            char = this.string.charAt(next);
-            nextChar = this.string.charAt(next + 1);
+            char = this.string.charCodeAt(next);
+            nextChar = this.string.charCodeAt(next + 1);
 
             if (char == TOKENS.newline) {
                 this.offset = next;
                 this.line  += 1;
             }
-        } while (!(char === '*' && nextChar === '/'));
+        } while (!(char === TOKENS.asterisk && nextChar === TOKENS.forwardSlash));
 
         this.pushBlockToken(
             'MULTILINE_COMMENT',
@@ -295,8 +306,8 @@ class Tokenizer {
 
         do {
             next++;
-            char = this.string.charAt(next);
-        } while (char !== '\n');
+            char = this.string.charCodeAt(next);
+        } while (char !== TOKENS.newline);
 
         this.pushCharacterToken('COMMENT', this.string.slice(this.pos, next));
         this.pos = next - 1;
@@ -311,13 +322,13 @@ class Tokenizer {
 
         do {
             next++;
-            char = this.string.charAt(next);
+            char = this.string.charCodeAt(next);
 
-            if (char == TOKENS.newline) {
+            if (isNewline(char)) {
                 this.offset = next;
                 this.line  += 1;
             }
-        } while (char.match(/\s/));
+        } while (isWhitespace(char));
 
         this.pushCharacterToken('WHITESPACE', this.string.slice(this.pos, next));
         this.pos = next - 1;
@@ -332,8 +343,8 @@ class Tokenizer {
 
         do {
             next++;
-            char = this.string.charAt(next);
-        } while (char.match(/[A-Za-z]/));
+            char = this.string.charCodeAt(next);
+        } while (isLetter(char));
 
         this.pushCharacterToken('WORD', this.string.slice(this.pos, next));
         this.pos = next - 1;
@@ -343,14 +354,14 @@ class Tokenizer {
      * Find quoted string tokens.
      */
     tokenizeQuotedString() {
-        let openingQuote = this.string.charAt(this.pos);
+        let openingQuote = this.string.charCodeAt(this.pos);
         let next = this.pos;
         let char, prevChar;
 
         do {
             next++;
-            char = this.string.charAt(next);
-            prevChar = this.string.charAt(next - 1);
+            char = this.string.charCodeAt(next);
+            prevChar = this.string.charCodeAt(next - 1);
         } while (!(char === openingQuote && prevChar !== '\\'));
 
         this.pushCharacterToken('STRING', this.string.slice(this.pos, next + 1));
@@ -366,8 +377,8 @@ class Tokenizer {
 
         do {
             next++;
-            char = this.string.charAt(next);
-        } while (char.match(/[0-9]/));
+            char = this.string.charCodeAt(next);
+        } while (isDigit(char));
 
         this.pushCharacterToken('WORD', this.string.slice(this.pos, next));
         this.pos = next - 1;

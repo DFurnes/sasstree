@@ -4,8 +4,8 @@ import { getCharCode } from './util';
  * @module Tokens
  * Token characters for the tokenizer.
  */
-export default {
 
+var tokens = {
     // Whitespace
     space: ' ',
     newline: '\n',
@@ -43,8 +43,23 @@ export default {
     percent: '%',
     period: '.',
     plus: '+',
-    backSlash: '\\',
     forwardSlash: '/',
-    tilde: '~'
+    tilde: '~',
+
+    // IE Hack
+    backSlash: '\\',
+    nine: '9'
 
 };
+
+/**
+ * Token characters represented as character codes. This
+ * allows for faster comparison in the tokenizer stage.
+ * @type {Array}
+ */
+var tokenCodes = [];
+Object.keys(tokens).map(function(value) {
+   tokenCodes[value] = tokens[value].charCodeAt(0);
+});
+
+export default tokenCodes;
