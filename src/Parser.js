@@ -186,6 +186,8 @@ class Parser {
         var node = new Node('Rule', token.source);
         this.addNode(node);
 
+        let _prevParent = this.current;
+        this.setCurrentParent(node);
 
         this.prev();
         let _text = '';
@@ -194,15 +196,8 @@ class Parser {
         while (next = this.nextToken()) {
 
             if(next.type === 'OPEN_CURLY') {
-                let _prevParent = this.current;
-                this.setCurrentParent(node);
-
                 this.parseBlock(next);
-
-                this.setCurrentParent(_prevParent);
-
                 break;
-
             } else if(next.type === 'SEMICOLON') {
                 node.type = 'Declaration';
                 node.after += ';';
@@ -214,6 +209,7 @@ class Parser {
 
         node.value = _text;
 
+        this.setCurrentParent(_prevParent);
     }
 
     /**
