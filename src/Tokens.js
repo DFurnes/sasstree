@@ -36,13 +36,14 @@ var tokens = {
     dollar: '$',
     equals: '=',
     exponent: '^',
+    forwardSlash: '/',
     greaterThan: '>',
     hash: '#',
     percent: '%',
     period: '.',
     plus: '+',
-    forwardSlash: '/',
     tilde: '~',
+    underscore: '_',
 
     // IE Hack
     backSlash: '\\',

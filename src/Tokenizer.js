@@ -222,6 +222,10 @@ class Tokenizer {
                     this.pushCharacterToken('ASTERISK', '*');
                     break;
 
+                case TOKENS.underscore:
+                    this.pushCharacterToken('UNDERSCORE', '_');
+                    break;
+
                 default:
                     // Parse comments first by halting on '/*' or '//'
                     let nextChar = string.charCodeAt(this.pos + 1);
