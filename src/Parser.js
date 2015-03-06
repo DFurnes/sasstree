@@ -138,8 +138,11 @@ class Parser {
      * Unset current parent, moving back up towards the root of the AST.
      */
     unsetParent() {
-        if(this.current.parent) {
-            this.current = this.current.parent;
+        let newParent = this.current.parent;
+
+        if(newParent) {
+            this.current = newParent;
+            this.latest = newParent;
         }
     }
 
