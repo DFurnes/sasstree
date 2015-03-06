@@ -32,7 +32,7 @@ class Parser {
         this.current = root;
 
         /**
-         * The last node that was added to the tree.
+         * The last node that was added to the tree. This is where we attach whitespace to.
          * @type {Node}
          */
         this.latest = root;
@@ -75,7 +75,7 @@ class Parser {
         return this.tokens[this.pos];
     }
 
-    prev() {
+    prevToken() {
         if(this.pos === 0) return false;
         this.pos--;
 
@@ -117,12 +117,26 @@ class Parser {
      * @param node
      */
     addNode(node) {
+        node.parent = this.current;
         this.current.attachChild(node);
         this.latest = node;
     }
 
-    setCurrentParent(node) {
+    /**
+     * Set a node as the current "parent" node that nodes should be added to.
+     * @param node
+     */
+    setParent(node) {
         this.current = node;
+    }
+
+    /**
+     * Unset current parent, moving back up towards the root of the AST.
+     */
+    unsetParent() {
+        if(this.current.parent) {
+            this.current = this.current.parent;
+        }
     }
 
     /**
@@ -141,8 +155,7 @@ class Parser {
 
         this.addNode(node);
 
-        let _prevParent = this.current;
-        this.setCurrentParent(node);
+        this.setParent(node);
 
         node.value = '';
 
@@ -176,7 +189,7 @@ class Parser {
             }
         }
 
-        this.setCurrentParent(_prevParent);
+        this.unsetParent();
     }
 
     /**
@@ -186,10 +199,9 @@ class Parser {
         var node = new Node('Rule', token.source);
         this.addNode(node);
 
-        let _prevParent = this.current;
-        this.setCurrentParent(node);
+        this.setParent(node);
 
-        this.prev();
+        this.prevToken();
         let _text = '';
 
         let next;
@@ -209,7 +221,11 @@ class Parser {
 
         node.value = _text;
 
-        this.setCurrentParent(_prevParent);
+        this.unsetParent();
+    }
+
+    parseDeclaration(token) {
+
     }
 
     /**
@@ -220,8 +236,7 @@ class Parser {
         var node = new Node('Block', token.source);
         this.addNode(node);
 
-        let _prevParent = this.current;
-        this.setCurrentParent(node);
+        this.setParent(node);
 
         let child;
         while(child = this.nextToken()) {
@@ -234,7 +249,7 @@ class Parser {
             }
         }
 
-        this.setCurrentParent(_prevParent);
+        this.unsetParent();
     }
 
     /**
