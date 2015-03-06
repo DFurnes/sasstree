@@ -17,10 +17,6 @@ class Node {
         this.after = '';
     }
 
-    setContent(content) {
-        this.content = content;
-    }
-
     attachChild(child) {
         if(!this.children) {
             this.children = [];
@@ -35,6 +31,7 @@ class Node {
 
         delete copy.type;
         delete copy.source;
+        delete copy.parent;
 
         return {
             [type]: copy

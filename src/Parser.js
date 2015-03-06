@@ -1,5 +1,12 @@
 import Tokenizer from './Tokenizer';
-import Node from './Node';
+
+import Node from './Nodes/Node';
+import AtRule from './Nodes/AtRule';
+import Block from './Nodes/Block';
+import Comment from './Nodes/Comment';
+import DocumentRoot from './Nodes/DocumentRoot';
+import Declaration from './Nodes/Declaration';
+import Ruleset from './Nodes/Ruleset';
 
 /**
  * @class Parser
@@ -19,23 +26,19 @@ class Parser {
          * The AST. This is where we store AST nodes as we construct the tree.
          * @type {Array}
          */
-        this.ast = [];
-
-        // Create a document root node.
-        var root = new Node('DocumentRoot', '', null);
-        this.ast.push(root);
+        this.ast = new DocumentRoot();
 
         /**
          * Marks the current position in the AST. This is where we add child nodes to.
          * @type {Node}
          */
-        this.current = root;
+        this.current = this.ast;
 
         /**
          * The last node that was added to the tree. This is where we attach whitespace to.
          * @type {Node}
          */
-        this.latest = root;
+        this.latest = this.ast;
 
         /**
          * Index of the current token being consumed.
@@ -95,7 +98,7 @@ class Parser {
             case 'PERIOD':
             case 'HASH':
             case 'WORD':
-                this.parseRule(token);
+                this.parseStatement(token);
                 break;
 
             case 'MULTILINE_COMMENT':
@@ -104,8 +107,8 @@ class Parser {
                 break;
 
             default:
-                var node = new Node(token.type, token.source);
-                node.setContent(token.lexeme);
+                var node = new Node(`UNPARSED TOKEN: ${token.type}`, token.source);
+                node.content = token.lexeme;
                 this.addNode(node);
                 break;
         }
@@ -117,8 +120,9 @@ class Parser {
      * @param node
      */
     addNode(node) {
-        node.parent = this.current;
         this.current.attachChild(node);
+        node.parent = this.current;
+
         this.latest = node;
     }
 
@@ -140,6 +144,26 @@ class Parser {
     }
 
     /**
+     * Throw an exception when the parser finds an unexpected token.
+     * @TODO: This could use some friendlier reporting.
+     * @param token
+     */
+    throwException(token, expected) {
+        function ParserException() {
+            this.name = 'ParserException';
+            this.message = `Unexpected input token ${token.type} at ${token.source.line}:${token.source.column}.`;
+
+            if(expected) {
+                this.message += ` Expected ${expected}.`
+            }
+
+        }
+
+        throw new ParserException();
+    }
+
+
+    /**
      * Attach whitespace to previous rule.
      */
     attachWhitespace(whitespace) {
@@ -150,82 +174,91 @@ class Parser {
      * Attempt to parse an at-rule node.
      */
     parseAtRule(token) {
-        var node = new Node('AtRule', token.source);
-        node.rule = token.lexeme;
+        var atRule = new AtRule(token);
 
-        this.addNode(node);
+        this.addNode(atRule);
 
-        this.setParent(node);
-
-        node.value = '';
+        atRule.value = '';
 
         let child;
         while(child = this.nextToken()) {
             if(child.type === 'WHITESPACE') {
-                node.between = child.lexeme;
-            } else if(child.type === 'STRING') {
-                node.value += child.lexeme;
-            } else if(child.type === 'DASH') {
-                node.value += child.lexeme;
-            } else if(child.type === 'COLON') {
-                node.value += child.lexeme;
-            } else if(child.type === 'COMMA') {
-                node.value += child.lexeme;
-            } else if(child.type === 'WORD') {
-                node.value += child.lexeme;
+                atRule.between = child.lexeme;
+            } else if (
+                child.type === 'STRING'     ||
+                child.type === 'DASH'       ||
+                child.type === 'COLON'      ||
+                child.type === 'COMMA'      ||
+                child.type === 'WORD'       ||
+                child.type == 'OPEN_PAREN'  ||
+                child.type == 'CLOSE_PAREN'
+            ) {
+                atRule.value += child.lexeme;
             } else if(child.type === 'OPEN_CURLY') {
+                this.setParent(atRule);
                 this.parseBlock(child);
+                this.unsetParent();
                 break;
-            } else if (child.type === 'OPEN_PAREN') {
-                node.value += '(';
-            } else if (child.type === 'CLOSE_PAREN') {
-                node.value += ')';
             } else if (child.type === 'SEMICOLON') {
-                node.after = ';';
+                atRule.after += ';';
                 break;
             } else {
-                console.log(node);
                 this.throwException(child);
             }
         }
+    }
+
+    /**
+     * Attempt to parse a statement.
+     * @TODO Is this the right terminology? Should this exist in AST?
+     */
+    parseStatement(token) {
+        this.prevToken();
+        let text = '';
+
+        let next;
+        while (next = this.nextToken()) {
+            if(next.type === 'OPEN_CURLY') {
+                // We're entering a block, so this must be a rule.
+                this.parseRuleset(token, next, text);
+                break;
+            } else if(next.type === 'SEMICOLON') {
+                // We found a semicolon, so this must be a declaration.
+                this.parseDeclaration(token, text);
+                break;
+            } else {
+                text += next.lexeme;
+            }
+        }
+    }
+
+    /**
+     * Parse a ruleset ".selector { ... }"
+     * @param token
+     * @param block
+     * @param selector
+     */
+    parseRuleset(token, block, selector) {
+        let ruleset = new Ruleset(token, selector);
+
+        this.addNode(ruleset);
+        this.setParent(ruleset);
+
+        this.parseBlock(block);
 
         this.unsetParent();
     }
 
     /**
-     * Attempt to parse a rule node.
+     * Parse a declaration "property: value;"
+     * @param token
+     * @param text
      */
-    parseRule(token) {
-        var node = new Node('Rule', token.source);
-        this.addNode(node);
+    parseDeclaration(token, text) {
+        let declaration = new Declaration(token, text);
+        declaration.after += ';';
 
-        this.setParent(node);
-
-        this.prevToken();
-        let _text = '';
-
-        let next;
-        while (next = this.nextToken()) {
-
-            if(next.type === 'OPEN_CURLY') {
-                this.parseBlock(next);
-                break;
-            } else if(next.type === 'SEMICOLON') {
-                node.type = 'Declaration';
-                node.after += ';';
-                break;
-            } else {
-                _text += next.lexeme;
-            }
-        }
-
-        node.value = _text;
-
-        this.unsetParent();
-    }
-
-    parseDeclaration(token) {
-
+        this.addNode(declaration);
     }
 
     /**
@@ -233,10 +266,10 @@ class Parser {
      * @param token
      */
     parseBlock(token) {
-        var node = new Node('Block', token.source);
-        this.addNode(node);
+        let block = new Block(token);
+        this.addNode(block);
 
-        this.setParent(node);
+        this.setParent(block);
 
         let child;
         while(child = this.nextToken()) {
@@ -257,32 +290,9 @@ class Parser {
      * @param token
      */
     parseComment(token) {
-        var node = new Node('Comment', token.source);
-        this.addNode(node);
-
-        node.multiline = (token.type === 'MULTILINE_COMMENT');
-        node.content = token.lexeme;
+        let comment = new Comment(token);
+        this.addNode(comment);
     }
-
-    /**
-     * Throw an exception when the parser finds an unexpected token.
-     * @TODO: This could use some friendlier reporting.
-     * @param token
-     */
-    throwException(token, expected) {
-        function ParserException() {
-            this.name = 'ParserException';
-            this.message = `Unexpected input token ${token.type} at ${token.source.line}:${token.source.column}.`;
-
-            if(expected) {
-                this.message += ` Expected ${expected}.`
-            }
-
-        }
-
-        throw new ParserException();
-    }
-
 
 }
 
