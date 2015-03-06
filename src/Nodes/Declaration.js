@@ -4,10 +4,11 @@ import Node from './Node';
  * @class Node
  */
 class Declaration extends Node {
-    constructor(token, text) {
+    constructor(token, property, value) {
         super('Declaration', token.source)
 
-        this.content = text;
+        this.property = property;
+        this.value = value;
     }
 
 

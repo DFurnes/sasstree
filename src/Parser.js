@@ -255,7 +255,11 @@ class Parser {
      * @param text
      */
     parseDeclaration(token, text) {
-        let declaration = new Declaration(token, text);
+        let separator = text.indexOf(':');
+        let property = text.substring(0, separator);
+        let value = text.substring(separator + 1);
+
+        let declaration = new Declaration(token, property, value);
         declaration.after += ';';
 
         this.addNode(declaration);
