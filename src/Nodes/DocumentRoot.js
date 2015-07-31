@@ -6,7 +6,7 @@ import Node from './Node';
 class DocumentRoot extends Node {
 
     constructor() {
-        super('DocumentRoot', null)
+        super('DocumentRoot', null);
 
         delete this.source;
     }
