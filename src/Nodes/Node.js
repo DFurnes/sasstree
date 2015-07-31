@@ -25,6 +25,16 @@ class Node {
         this.children.push(child);
     }
 
+    walk(callback) {
+        callback(this);
+
+        if(this.children && this.children.length) {
+            this.children.forEach(function(child) {
+                child.walk(callback);
+            });
+        }
+    }
+
     toJSON() {
         var copy = clone(this);
         var type = copy.type;
