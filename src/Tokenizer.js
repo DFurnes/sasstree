@@ -18,7 +18,7 @@ class Tokenizer {
 
         /**
          * The tokens!
-         * @type {Array}
+         * @type {array}
          */
         this.tokens = [];
 
