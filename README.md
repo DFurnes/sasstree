@@ -18,7 +18,6 @@ From the command line:
 ```sh
 npm install -g sasstree
 sasstree <INPUT_FILE>
-cat output.json
 ```
 
 ### Development
