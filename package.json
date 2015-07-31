@@ -15,6 +15,7 @@
   "author": "David Furnes <david@dfurnes.com>",
   "license": "MIT",
   "dependencies": {
+    "commander": "^2.8.1",
     "lodash": "^3.3.1"
   },
   "devDependencies": {

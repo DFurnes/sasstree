@@ -50,23 +50,33 @@ class Parser {
     /**
      * Parse an array of tokens.
      * @param {string} scss
+     * @param {object} options
      */
-    parse(scss) {
+    parse(scss, options) {
         // Start a new tokenizer
         var tokenizer = new Tokenizer();
 
-        console.time('tokenize');
+        if(options && options.bench) {
+          console.time('tokenize');
+        }
+
         // Use the Tokenizer to parse SCSS string into an array of tokens.
         this.tokens = tokenizer.tokenize(scss);
-        console.timeEnd('tokenize');
 
-        console.time('parse');
+        if(options && options.bench) {
+          console.timeEnd('tokenize');
+          console.time('parse');
+        }
+
         //Loop through tokens & parse.
         let token;
         while(token = this.nextToken()) {
             this.parseToken(token);
         }
-        console.timeEnd('parse');
+
+        if(options && options.bench) {
+          console.timeEnd('parse');
+        }
 
         return this.ast;
     }
