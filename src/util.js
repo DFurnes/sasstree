@@ -7,10 +7,10 @@ import TOKENS from './Tokens';
  */
 export var isWhitespace = function(code) {
     return code == TOKENS.space          ||
-           code == TOKENS.newline        ||
-           code == TOKENS.tab            ||
-           code == TOKENS.carriageReturn ||
-           code == TOKENS.formFeed;
+        code == TOKENS.newline        ||
+        code == TOKENS.tab            ||
+        code == TOKENS.carriageReturn ||
+        code == TOKENS.formFeed;
 };
 
 

@@ -57,15 +57,15 @@ class Parser {
         var tokenizer = new Tokenizer();
 
         if(options && options.bench) {
-          console.time('tokenize');
+            console.time('tokenize');
         }
 
         // Use the Tokenizer to parse SCSS string into an array of tokens.
         this.tokens = tokenizer.tokenize(scss);
 
         if(options && options.bench) {
-          console.timeEnd('tokenize');
-          console.time('parse');
+            console.timeEnd('tokenize');
+            console.time('parse');
         }
 
         //Loop through tokens & parse.
@@ -75,7 +75,7 @@ class Parser {
         }
 
         if(options && options.bench) {
-          console.timeEnd('parse');
+            console.timeEnd('parse');
         }
 
         return this.ast;
@@ -160,6 +160,7 @@ class Parser {
      * Throw an exception when the parser finds an unexpected token.
      * @TODO: This could use some friendlier reporting.
      * @param token
+     * @param expected
      */
     throwException(token, expected) {
         function ParserException() {
