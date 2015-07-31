@@ -374,15 +374,21 @@ class Tokenizer {
 
     /**
      * Tokenize an at-word symbol.
+     *
+     * For example:
+     *   `@charset "UTF-8";`
+     *   `@font-face { ... }`
      */
     tokenizeAtSymbol() {
         let next = this.pos;
         let char;
 
+        // At-symbols are followed by a keyword, and then either a string or block.
+
         do {
             next++;
             char = this.string.charCodeAt(next);
-        } while (!(isWhitespace(char) || char == TOKENS.openParen || char == TOKENS.closeParen));
+        } while (!(isWhitespace(char) || char == TOKENS.openParen || char == TOKENS.openCurlyBracket));
 
         this.pushCharacterToken('AT', this.string.slice(this.pos, next));
         this.pos = next - 1;
