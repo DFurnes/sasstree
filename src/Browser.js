@@ -27,7 +27,7 @@ function readAndParse() {
   console.time('SassTree');
 
   let parser = new Parser();
-  let ast = parser.parse(input);
+  let ast = parser.parse(input, { bench: true });
   console.log(ast);
 
   console.timeEnd('SassTree');
