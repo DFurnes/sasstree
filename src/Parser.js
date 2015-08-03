@@ -88,6 +88,11 @@ class Parser {
         return this.tokens[this.pos];
     }
 
+    peek() {
+        if(this.pos === this.tokens.length) return false;
+        return this.tokens[this.pos + 1];
+    }
+
     prevToken() {
         if(this.pos === 0) return false;
         this.pos--;
