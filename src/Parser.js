@@ -200,6 +200,7 @@ class Parser {
                 atRule.between = child.lexeme;
             } else if (
                 child.type === 'STRING'     ||
+                child.type === 'HASH'       ||
                 child.type === 'DOLLAR'     ||
                 child.type === 'PERCENT'    ||
                 child.type === 'DASH'       ||
