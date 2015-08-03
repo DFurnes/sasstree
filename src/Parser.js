@@ -217,7 +217,17 @@ class Parser {
                 child.type == 'OPEN_PAREN'  ||
                 child.type == 'CLOSE_PAREN'
             ) {
-                atRule.value += child.lexeme;
+                // Handle interpolation... e.g. #{$variable}
+                if(child.type === 'HASH' && this.peek().type === 'OPEN_CURLY') {
+                    atRule.value += this.readInterpolation(child);
+                } else {
+                    atRule.value += child.lexeme;
+                }
+            } else if(child.type === 'AT') {
+                this.setParent(atRule);
+                this.parseAtRule(child);
+                this.unsetParent();
+                break;
             } else if(child.type === 'OPEN_CURLY') {
                 this.setParent(atRule);
                 this.parseBlock(child);
@@ -227,9 +237,30 @@ class Parser {
                 atRule.after += ';';
                 break;
             } else {
+                console.log('atrule exception');
                 this.throwException(child);
             }
         }
+    }
+
+    /**
+     * Attempt to read an interpolation & return its text.
+     * e.g. #{$variable}
+     */
+    readInterpolation(token) {
+        let text = '#';
+
+        let next;
+        while (next = this.nextToken()) {
+            text += next.lexeme;
+
+            // On the next closing curly bracket, leave the interpolation.
+            if(next.type === 'CLOSE_CURLY') {
+                break;
+            }
+        }
+
+        return text;
     }
 
     /**
@@ -246,7 +277,12 @@ class Parser {
                 // We're entering a block, so this must be a rule.
                 this.parseRuleset(token, next, text);
                 break;
-            } else if(next.type === 'SEMICOLON') {
+            } else if (next.type === 'HASH') {
+                // We found a hash, which might be either an ID or interpolation...
+                if(this.peek().type === 'OPEN_CURLY') {
+                    text += this.readInterpolation(token);
+                }
+            } else if (next.type === 'SEMICOLON') {
                 // We found a semicolon, so this must be a declaration.
                 this.parseDeclaration(token, text);
                 break;
