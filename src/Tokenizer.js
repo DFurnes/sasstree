@@ -170,6 +170,10 @@ class Tokenizer {
                     this.tokenizeQuotedString();
                     break;
 
+                case TOKENS.ampersand:
+                    this.pushCharacterToken('AMPERSAND', '&');
+                    break;
+
                 case TOKENS.exponent:
                     this.pushCharacterToken('EXPONENT', '^');
                     break;

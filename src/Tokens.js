@@ -29,6 +29,7 @@ let tokens = {
     semicolon: ';',
 
     // Symbols
+    ampersand: '&',
     asterisk: '*',
     atSymbol: '@',
     bang: '!',
