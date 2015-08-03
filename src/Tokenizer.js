@@ -88,7 +88,7 @@ class Tokenizer {
     /**
      * Return next character in string input, or false.
      * @param string
-     * @returns {*}
+     * @returns {number} character code
      */
     nextChar(string) {
         if(this.pos === string.length) return false;
@@ -99,7 +99,7 @@ class Tokenizer {
     /**
      * Given a SCSS string, return its tokens.
      * @param string
-     * @returns {Array}
+     * @returns {array}
      */
     tokenize(string) {
         let char;
