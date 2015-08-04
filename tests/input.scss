@@ -22,8 +22,8 @@ $what: '.class';
 
 $breakpoint: 'min-width: 100px';
 
-@media(#{$breakpoint}) {
+@mixin media($breakpoint) {
   .thing {
-    color: blue !important;
+    @content;
   }
 }

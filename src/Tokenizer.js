@@ -392,7 +392,7 @@ class Tokenizer {
         do {
             next++;
             char = this.string.charCodeAt(next);
-        } while (!(isWhitespace(char) || char == TOKENS.openParen || char == TOKENS.openCurlyBracket));
+        } while (!(isWhitespace(char) || char == TOKENS.openParen || char == TOKENS.openCurlyBracket || char == TOKENS.semicolon));
 
         this.pushCharacterToken('AT', this.string.slice(this.pos, next));
         this.pos = next - 1;
