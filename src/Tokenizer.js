@@ -248,7 +248,7 @@ class Tokenizer {
                         break;
                     }
 
-                    if(char === TOKENS.backSlash && nextChar === TOKENS.nine) {
+                    if(char === TOKENS.backslash && nextChar === TOKENS.nine) {
                         this.pushCharacterToken('HACK', '\\9');
                         break;
                     }

@@ -47,7 +47,7 @@ let tokens = {
     underscore: '_',
 
     // IE Hack
-    backSlash: '\\',
+    backslash: '\\',
     nine: '9'
 };
 
