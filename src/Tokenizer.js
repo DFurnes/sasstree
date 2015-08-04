@@ -362,15 +362,27 @@ class Tokenizer {
      * Find quoted string tokens.
      */
     tokenizeQuotedString() {
-        let openingQuote = this.string.charCodeAt(this.pos);
+        const quote = this.string.charCodeAt(this.pos);
+        const quoteChar = quote === TOKENS.singleQuote ? "'" : '"';
         let next = this.pos;
-        let char, prevChar;
+        let escaped;
 
         do {
-            next++;
-            char = this.string.charCodeAt(next);
-            prevChar = this.string.charCodeAt(next - 1);
-        } while (!(char === openingQuote && prevChar !== '\\'));
+            escaped = false;
+            next = this.string.indexOf(quoteChar, next + 1);
+
+            // If there's no matching quote, throw a tokenizer error.
+            if ( next === -1 ) throw new Error('Unclosed quote: ' + quoteChar);
+
+            // Is the char before the next matching quote a backslash? If so, is
+            // _that_ backslash escaped by a backlash(...)? If it's a valid escaped quote
+            // char, restart the loop so we can find the following quote and test it.
+            let escapePos = next;
+            while ( this.string.charCodeAt(escapePos - 1) === TOKENS.backslash ) {
+                escapePos -= 1;
+                escaped = !escaped;
+            }
+        } while ( escaped );
 
         this.pushCharacterToken('STRING', this.string.slice(this.pos, next + 1));
         this.pos = next;
