@@ -210,6 +210,7 @@ class Parser {
                 child.type === 'DOLLAR'     ||
                 child.type === 'PERCENT'    ||
                 child.type === 'DASH'       ||
+                child.type === 'UNDERSCORE' ||
                 child.type === 'PLUS'       ||
                 child.type === 'PERIOD'     ||
                 child.type === 'COLON'      ||
