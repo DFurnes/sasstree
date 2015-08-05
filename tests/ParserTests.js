@@ -1,14 +1,17 @@
 import test from 'tape';
 import Parser from '../src/Parser';
 
+const { raw } = String;
+
 test('Parser', function(t) {
-    t.plan(1);
+    t.plan(2);
+
 
     t.test('simple rule', function(t) {
         t.plan(8);
 
         const parser = new Parser();
-        const ast = parser.parse(`
+        const ast = parser.parse(raw`
           p {
             color: red;
           }
@@ -28,6 +31,19 @@ test('Parser', function(t) {
         t.equals(declaration.type, 'Declaration', 'Recognizes declaration');
         t.equals(declaration.property, 'color', 'Recognizes property');
         t.equals(declaration.value, ' red', 'Recognizes value');  // @TODO: Should the whitespace be included here?
+    });
+
+
+    t.test('string escaping', function(t) {
+        t.plan(2);
+
+        let parser = new Parser();
+        let ast = parser.parse(raw`$silly_escape: "\"";`);
+        t.equals(ast.children[0].value, raw` "\""`, 'parses correct escaped quote value');
+
+        parser = new Parser();
+        ast = parser.parse(raw`$another_silly_escape: "\\";`);
+        t.equals(ast.children[0].value, raw` "\\"`, 'parses correct escaped backslash value');
     });
 
 });
