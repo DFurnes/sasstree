@@ -53,5 +53,14 @@ test('Parser - declaration with missing semicolon', function(t) {
     t.equals(declaration.property, 'color', 'Recognizes property');
 });
 
+test('Parser - get whitespace before a node', function(t) {
+    t.plan(2);
+
+    let parser = new Parser();
+    const ast = parser.parse(raw`p { color: red; border: 0 }  `);
+
+    const declarations = ast.find('Declaration');
+    t.equals(declarations[0].parent.after, declarations[0].before, 'before matches parent\'s after');
+    t.equals(declarations[0].after, declarations[1].before, 'before matches previous sibling\'s after');
 });
 

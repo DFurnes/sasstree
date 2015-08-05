@@ -17,6 +17,14 @@ class Node {
         this.after = '';
     }
 
+    get before() {
+        if(this.previousNode) {
+            return this.previousNode.after;
+        }
+
+        return '';
+    }
+
     attachChild(child) {
         if(!this.children) {
             this.children = [];

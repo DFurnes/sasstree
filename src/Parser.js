@@ -138,6 +138,7 @@ class Parser {
     addNode(node) {
         this.current.attachChild(node);
         node.parent = this.current;
+        node.previousNode = this.latest;
 
         this.latest = node;
     }
