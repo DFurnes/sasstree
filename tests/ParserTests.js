@@ -4,8 +4,7 @@ import Parser from '../src/Parser';
 const { raw } = String;
 
 test('Parser', function(t) {
-    t.plan(2);
-
+    t.plan(3);
 
     t.test('simple rule', function(t) {
         t.plan(8);
@@ -44,6 +43,17 @@ test('Parser', function(t) {
         parser = new Parser();
         ast = parser.parse(raw`$another_silly_escape: "\\";`);
         t.equals(ast.children[0].value, raw` "\\"`, 'parses correct escaped backslash value');
+    });
+
+    t.test('declaration with missing semicolon', function(t) {
+        t.plan(2);
+
+        let parser = new Parser();
+        const ast = parser.parse(raw`p { color: red }`);
+
+        const declaration = ast.find('Declaration')[0];
+        t.ok(typeof declaration != 'undefined', 'Recognizes declaration');
+        t.equals(declaration.property, 'color', 'Recognizes property');
     });
 
 });

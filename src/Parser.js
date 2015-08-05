@@ -288,6 +288,10 @@ class Parser {
                 // We found a semicolon, so this must be a declaration.
                 this.parseDeclaration(token, text);
                 break;
+            } else if (next.type === 'CLOSE_CURLY' && text.length) {
+                // We found a closing curly with an unterminated declaration before it
+                this.parseDeclaration(token, text, false);
+                break;
             } else {
                 text += next.lexeme;
             }
@@ -316,13 +320,15 @@ class Parser {
      * @param token
      * @param text
      */
-    parseDeclaration(token, text) {
+    parseDeclaration(token, text, terminated = true) {
         let separator = text.indexOf(':');
         let property = text.substring(0, separator);
         let value = text.substring(separator + 1);
 
         let declaration = new Declaration(token, property, value);
-        declaration.after += ';';
+        if(terminated) {
+            declaration.after += ';';
+        }
 
         this.addNode(declaration);
     }
