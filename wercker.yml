@@ -1,0 +1,13 @@
+box: nodesource/precise:0.12.7
+
+build:
+    steps:
+        - script:
+            code: |-
+                # Remove node_modules folder in case there are broken symlinks
+                rm -rf node_modules
+
+                # Force `NODE_ENV` to testing, since it defaults to `production`
+                export NODE_ENV='testing'
+        - npm-install
+        - npm-test
