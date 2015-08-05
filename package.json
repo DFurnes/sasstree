@@ -25,6 +25,7 @@
     "browserify": "^9.0.3",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.2",
+    "tape-catch": "^1.0.4",
     "watchify": "^3.3.1"
   }
 }
