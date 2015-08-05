@@ -35,6 +35,16 @@ class Node {
         }
     }
 
+    find(nodeType) {
+        let matches = [];
+
+        this.walk(function(node) {
+           if(node.type === nodeType) matches.push(node);
+        });
+
+        return matches;
+    }
+
     toJSON() {
         var copy = clone(this);
         var type = copy.type;
