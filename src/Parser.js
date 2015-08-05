@@ -52,7 +52,7 @@ class Parser {
      * @param {string} scss
      * @param {object} options
      */
-    parse(scss, options) {
+    parse(scss, options = {}) {
         // Start a new tokenizer
         var tokenizer = new Tokenizer();
 
