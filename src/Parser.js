@@ -295,7 +295,7 @@ class Parser {
     }
 
     /**
-     * Parse a ruleset ".selector { ... }"
+     * Parse a ruleset "selector { ... }"
      * @param token
      * @param block
      * @param selector
