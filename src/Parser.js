@@ -284,6 +284,8 @@ class Parser {
                 // We found a hash, which might be either an ID or interpolation...
                 if(this.peek().type === 'OPEN_CURLY') {
                     text += this.readInterpolation(token);
+                } else {
+                    text += next.lexeme;
                 }
             } else if (next.type === 'SEMICOLON') {
                 // We found a semicolon, so this must be a declaration.

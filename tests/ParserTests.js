@@ -45,7 +45,7 @@ test('Parser - string escaping', function(t) {
 test('Parser - declaration with missing semicolon', function(t) {
     t.plan(2);
 
-    let parser = new Parser();
+    const parser = new Parser();
     const ast = parser.parse(raw`p { color: red }`);
 
     const declaration = ast.find('Declaration')[0];
@@ -56,11 +56,22 @@ test('Parser - declaration with missing semicolon', function(t) {
 test('Parser - get whitespace before a node', function(t) {
     t.plan(2);
 
-    let parser = new Parser();
+    const parser = new Parser();
     const ast = parser.parse(raw`p { color: red; border: 0 }  `);
 
     const declarations = ast.find('Declaration');
     t.equals(declarations[0].parent.after, declarations[0].before, 'before matches parent\'s after');
     t.equals(declarations[0].after, declarations[1].before, 'before matches previous sibling\'s after');
+});
+
+test('Parser - strings and numbers', function(t) {
+    t.plan(1);
+
+    const parser = new Parser();
+    const ast = parser.parse(raw`p { color: #0af; }  `);
+
+    const declaration = ast.find('Declaration')[0];
+    t.equals(declaration.value, ' #0af', 'reads hexadecimal value');
+
 });
 
