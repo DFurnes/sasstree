@@ -1,4 +1,6 @@
 import Parser from './Parser';
+import React from 'react';
+import ObjectInspector from 'react-object-inspector';
 
 function ready(fn) {
     if (document.readyState !== 'loading') {
@@ -15,41 +17,30 @@ function ready(fn) {
 }
 
 /**
- * Read input & parse into an AST!
+ * Render a visualization of the AST.
  */
-function readAndParse() {
-    const element = document.getElementById('scss');
-    const input = element.value;
+function renderTree(input, canvas) {
+    const scss = input.value;
 
-    /**
-     * Parse into an AST!
-     */
     console.time('SassTree');
 
     let parser = new Parser();
-    let ast = parser.parse(input, { bench: true });
+    let ast = parser.parse(scss, { bench: true });
     console.log(ast);
 
     console.timeEnd('SassTree');
 
-    return ast;
-}
-
-/**
- * Render a visualization of the AST.
- */
-function renderTree(ast, el) {
-
-    // @TODO
-
+    React.render(<ObjectInspector data={ast} />, canvas);
 }
 
 ready(function() {
-    const trigger = document.getElementById('rerun');
-    trigger.addEventListener('click', readAndParse);
-
-    const ast = readAndParse();
+    const input = document.getElementById('scss');
     const canvas = document.getElementById('tree');
-    renderTree(ast, canvas);
+    renderTree(input, canvas);
+
+    const trigger = document.getElementById('rerun');
+    trigger.addEventListener('click', function() {
+        renderTree(input, canvas);
+    });
 });
 

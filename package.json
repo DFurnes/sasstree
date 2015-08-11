@@ -23,6 +23,8 @@
     "babel-tape-runner": "^1.2.0",
     "babelify": "^6.1.3",
     "browserify": "^9.0.3",
+    "react": "^0.13.3",
+    "react-object-inspector": "^0.1.4",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.2",
     "tape-catch": "^1.0.4",
