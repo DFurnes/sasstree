@@ -1,6 +1,8 @@
+import CodeMirror from 'codemirror';
+import ObjectInspector from 'react-object-inspector';
 import Parser from './Parser';
 import React from 'react';
-import ObjectInspector from 'react-object-inspector';
+import 'codemirror/mode/sass/sass';
 
 function ready(fn) {
     if (document.readyState !== 'loading') {
@@ -24,9 +26,15 @@ function renderTree(input, canvas) {
 
     console.time('SassTree');
 
-    let parser = new Parser();
-    let ast = parser.parse(scss, { bench: true });
-    console.log(ast);
+    let ast;
+    try {
+        let parser = new Parser();
+        ast = parser.parse(scss, { bench: true });
+        console.log(ast);
+    } catch(e) {
+        console.error(e);
+        ast = "Parsing error."
+    }
 
     console.timeEnd('SassTree');
 
@@ -38,8 +46,9 @@ ready(function() {
     const canvas = document.getElementById('tree');
     renderTree(input, canvas);
 
-    const trigger = document.getElementById('rerun');
-    trigger.addEventListener('click', function() {
+    var sourceEditor = CodeMirror.fromTextArea(input, { mode: 'sass' });
+    sourceEditor.on('change', function(editor) {
+        editor.save();
         renderTree(input, canvas);
     });
 });

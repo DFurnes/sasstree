@@ -24,5 +24,6 @@ deploy:
                 rm .gitignore && touch .gitignore
                 echo "node_modules/*" >> .gitignore
                 echo "!node_modules/react-object-inspector" >> .gitignore
+                echo "!node_modules/codemirror" >> .gitignore
       - lukevivier/gh-pages:
           token: $GH_TOKEN
