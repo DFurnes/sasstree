@@ -9,7 +9,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "babel src --out-dir lib",
-    "web": "watchify src/Browser.js -o bin/browser.js -t babelify --debug",
+    "build:web": "browserify src/Browser.js -o bin/browser.js -t babelify",
     "test": "babel-tape-runner tests/**/*.js | tap-spec"
   },
   "author": "David Furnes <david@dfurnes.com>",
