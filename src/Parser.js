@@ -240,7 +240,6 @@ class Parser {
                 atRule.after += ';';
                 break;
             } else {
-                console.log('atrule exception');
                 this.throwException(child);
             }
         }
