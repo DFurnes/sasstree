@@ -11,3 +11,8 @@ build:
                 export NODE_ENV='testing'
         - npm-install
         - npm-test
+
+deploy:
+    steps:
+      - lukevivier/gh-pages:
+          token: $GH_TOKEN
