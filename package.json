@@ -13,6 +13,7 @@
     "test": "babel-tape-runner tests/**/*.js | tap-spec"
   },
   "author": "David Furnes <david@dfurnes.com>",
+  "repository": "DFurnes/sasstree",
   "license": "MIT",
   "dependencies": {
     "commander": "^2.8.1",
