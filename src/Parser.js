@@ -123,9 +123,7 @@ class Parser {
                 break;
 
             default:
-                var node = new Node(`UNPARSED TOKEN: ${token.type}`, token.source);
-                node.content = token.lexeme;
-                this.addNode(node);
+                this.throwException(token);
                 break;
         }
 
