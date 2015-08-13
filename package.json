@@ -2,7 +2,7 @@
   "name": "sasstree",
   "version": "0.0.10",
   "description": "A Sass parser built in JavaScript.",
-  "main": "lib/Parser.js",
+  "main": "lib/index.js",
   "bin": {
     "sasstree": "bin/sasstree"
   },

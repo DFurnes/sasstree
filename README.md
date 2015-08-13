@@ -8,9 +8,8 @@ SassTree is a JavaScript SCSS parser.
 ### Usage
 As a Node module:
 ```js
-var Parser = require('sasstree');
-var parser = new Parser();
-parser.parse('.test { color: red }');
+var sasstree = require('sasstree');
+sasstree.parse('.test { color: red }');
 
 ```
 
