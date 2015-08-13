@@ -75,7 +75,7 @@ test('Parser - strings and numbers', function(t) {
 });
 
 test('Parser - selectors', function(t) {
-    t.plan(5);
+    t.plan(6);
 
     let parser = new Parser();
     let ast = parser.parse(raw`.test { display: none; }  `);
@@ -106,6 +106,12 @@ test('Parser - selectors', function(t) {
 
     ruleset = ast.find('Ruleset')[0];
     t.equals(ruleset.selector, '.class > .direct-child ', 'reads child selector');
+
+    parser = new Parser();
+    ast = parser.parse(raw`* { border-sizing: box; }  `);
+
+    ruleset = ast.find('Ruleset')[0];
+    t.equals(ruleset.selector, '* ', 'reads universal selector');
 });
 
 test('Parser - declarations', function(t) {

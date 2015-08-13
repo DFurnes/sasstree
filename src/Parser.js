@@ -116,6 +116,7 @@ class Parser {
             case 'WORD':
             case 'DASH':
             case 'OPEN_BRACKET':
+            case 'ASTERISK':
                 this.parseStatement(token);
                 break;
 
