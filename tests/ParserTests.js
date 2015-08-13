@@ -72,6 +72,15 @@ test('Parser - strings and numbers', function(t) {
 
     const declaration = ast.find('Declaration')[0];
     t.equals(declaration.value, ' #0af', 'reads hexadecimal value');
+});
 
+test('Parser - declarations', function(t) {
+    t.plan(1);
+
+    const parser = new Parser();
+    const ast = parser.parse(raw`p { -webkit-transition: opacity 1s; }  `);
+
+    const declaration = ast.find('Declaration')[0];
+    t.equals(declaration.property, '-webkit-transition', 'reads vendor prefixed property');
 });
 

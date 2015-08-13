@@ -114,6 +114,7 @@ class Parser {
             case 'DOLLAR':
             case 'HASH':
             case 'WORD':
+            case 'DASH':
                 this.parseStatement(token);
                 break;
 
