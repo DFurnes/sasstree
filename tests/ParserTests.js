@@ -66,7 +66,7 @@ test('Parser - strings and numbers', function(t) {
 });
 
 test('Parser - selectors', function(t) {
-    t.plan(6);
+    t.plan(7);
 
     let ast = sasstree.parse(raw`.test { display: none; }  `);
     let ruleset = ast.find('Ruleset')[0];
@@ -91,6 +91,10 @@ test('Parser - selectors', function(t) {
     ast = sasstree.parse(raw`* { border-sizing: box; }  `);
     ruleset = ast.find('Ruleset')[0];
     t.equals(ruleset.selector, '* ', 'reads universal selector');
+
+    ast = sasstree.parse(raw`%placeholder { color: black; }  `);
+    ruleset = ast.find('Ruleset')[0];
+    t.equals(ruleset.selector, '%placeholder ', 'reads placeholder selector');
 });
 
 test('Parser - declarations', function(t) {
