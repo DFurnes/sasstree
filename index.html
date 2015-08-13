@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sasstree Sandbox</title>
+
+    <link rel="stylesheet" type="text/css" href="node_modules/react-object-inspector/react-object-inspector.css">
+    <link rel="stylesheet" type="text/css" href="node_modules/codemirror/lib/codemirror.css">
+    <script src="bin/browser.js"></script>
+
+    <style>
+        html, body { font-family: 'Helvetica Neue', sans-serif; font-weight: 100; font-size: 18px; max-width: 720px; margin: 32px auto; }
+        h1, h2, h3, h4, h5, h6 { font-weight: 100; margin-bottom: 0; }
+        p { margin-top: 12px; margin-bottom: 24px; }
+        a { color: #333; }
+        label { display: block; margin: 32px 0 12px; font-size: 18px; }
+        .CodeMirror { background: #eee; padding: 12px; }
+    </style>
+</head>
+<body>
+
+<a href="https://github.com/dfurnes/sasstree"><img style="position: absolute; top: 0; right: 0; border: 0; width: 149px; height: 149px;" src="http://aral.github.com/fork-me-on-github-retina-ribbons/right-green@2x.png" alt="Fork me on GitHub"></a>
+
+<h1>Sasstree &#127795;</h1>
+<p>A SCSS AST parser written in JavaScript. Used to power <a href="https://www.github.com/dfurnes/sasslint">Sasslint</a>.</p>
+
+<label for="scss">Enter some SCSS:</label>
+<textarea id="scss" rows="9">
+.thing {
+    position: absolute;
+    width: 100%;
+}
+
+a {
+    text-decoration: underline;
+}
+</textarea>
+
+<label for="tree">Your tree:</label>
+<div id="tree"></div>
+
+</body>
+</html>

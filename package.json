@@ -1,0 +1,35 @@
+{
+  "name": "sasstree",
+  "version": "0.0.12",
+  "description": "A Sass parser built in JavaScript.",
+  "main": "lib/index.js",
+  "bin": {
+    "sasstree": "bin/sasstree"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "babel src --out-dir lib",
+    "build:web": "browserify src/Browser.js -o bin/browser.js -t babelify",
+    "test": "babel-tape-runner tests/**/*.js | tap-spec"
+  },
+  "author": "David Furnes <david@dfurnes.com>",
+  "repository": "DFurnes/sasstree",
+  "license": "MIT",
+  "dependencies": {
+    "codemirror": "^5.5.0",
+    "commander": "^2.8.1",
+    "lodash": "^3.3.1"
+  },
+  "devDependencies": {
+    "babel": "^4.6.1",
+    "babel-tape-runner": "^1.2.0",
+    "babelify": "^6.1.3",
+    "browserify": "^9.0.3",
+    "react": "^0.13.3",
+    "react-object-inspector": "^0.1.4",
+    "tap-spec": "^4.0.2",
+    "tape": "^4.0.2",
+    "tape-catch": "^1.0.4",
+    "watchify": "^3.3.1"
+  }
+}

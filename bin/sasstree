@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+var fs = require('fs');
+var path = require('path');
+
+// Determine whether to load src through Babel transpiler, or use pre-built version.
+if(fs.existsSync(path.join(__dirname, '..', 'lib/Parser.js'))) {
+    require('../lib/Console');
+} else {
+    require('babel/register');
+    require('../src/Console');
+}

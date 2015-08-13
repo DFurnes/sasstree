@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+$what: '.class';
+
+/**
+ * A multi-line
+ * comment string.
+ */
+.thing {
+  position: absolute;
+  width: 100%;
+  height: 178px; // who wrote this shit
+
+  #{$what} {
+    color: red;
+  }
+}
+
+.thing:before {
+  content: 'Hi!';
+}
+
+$breakpoint: 'min-width: 100px';
+
+@mixin media($breakpoint) {
+  .thing {
+    @content;
+  }
+}
+
+$silly_escape: "\"";
+
+$another_silly_escape: "\\";
