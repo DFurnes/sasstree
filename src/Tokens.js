@@ -1,9 +1,8 @@
 /**
- * @module Tokens
  * Token characters for the tokenizer.
+ * @var {Object}
  */
-
-let tokens = {
+let CHARS = {
     // Whitespace
     space: ' ',
     newline: '\n',
@@ -51,12 +50,57 @@ let tokens = {
     nine: '9'
 };
 
-/**
- * Token characters should be represented as character codes.
- * This allows for faster comparison in the tokenizer stage.
- */
-Object.keys(tokens).map(function(value) {
-    tokens[value] = tokens[value].charCodeAt(0);
+// Token characters should be represented as character codes.
+// This allows for faster comparison in the tokenizer stage.
+Object.keys(CHARS).map(function(value) {
+    CHARS[value] = CHARS[value].charCodeAt(0);
 });
 
-export default tokens;
+/**
+ * Token types.
+ * @type {object}
+ */
+let TOKENS = {
+    whitespace: 'WHITESPACE',
+
+    openBracket: 'OPEN_BRACKET',
+    closeBracket: 'CLOSE_BRACKET',
+    openCurlyBracket: 'OPEN_CURLY',
+    closeCurlyBracket: 'CLOSE_CURLY',
+    openParen: 'OPEN_PAREN',
+    closeParen: 'CLOSE_PAREN',
+
+    singleQuote: 'SINGLE_QUOTE',
+    doubleQuote: 'DOUBLE_QUOTE',
+
+    colon: 'COLON',
+    comma: 'COMMA',
+    semicolon: 'SEMICOLON',
+
+    ampersand: 'AMPERSAND',
+    asterisk: 'ASTERISK',
+    atSymbol: 'AT',
+    bang: 'BANG',
+    dash: 'DASH',
+    dollar: 'DOLLAR',
+    equals: 'EQUALS',
+    exponent: 'EXPONENT',
+    forwardSlash: 'FORWARD_SLASH',
+    greaterThan: 'GREATER_THAN',
+    hash: 'HASH',
+    percent: 'PERCENT',
+    period: 'PERIOD',
+    plus: 'PLUS',
+    tilde: 'TILDE',
+    underscore: 'UNDERSCORE',
+
+    hack: 'HACK',
+
+    word: 'WORD',
+    string: 'STRING',
+
+    comment: 'COMMENT',
+    multilineComment: 'MULTILINE_COMMENT',
+};
+
+export default { CHARS, TOKENS };

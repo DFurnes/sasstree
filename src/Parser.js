@@ -1,4 +1,5 @@
 import Tokenizer from './Tokenizer';
+import { TOKENS } from './Tokens';
 
 import Node from './Nodes/Node';
 import AtRule from './Nodes/AtRule';
@@ -106,27 +107,27 @@ class Parser {
 
     parseToken(token) {
         switch (token.type) {
-            case 'WHITESPACE':
+            case TOKENS.whitespace:
                 this.attachWhitespace(token.lexeme);
                 break;
 
-            case 'AT':
+            case TOKENS.atSymbol:
                 this.parseAtRule(token);
                 break;
 
-            case 'PERIOD':
-            case 'DOLLAR':
-            case 'HASH':
-            case 'WORD':
-            case 'DASH':
-            case 'OPEN_BRACKET':
-            case 'ASTERISK':
-            case 'PERCENT':
+            case TOKENS.period:
+            case TOKENS.dollar:
+            case TOKENS.hash:
+            case TOKENS.word:
+            case TOKENS.dash:
+            case TOKENS.openBracket:
+            case TOKENS.asterisk:
+            case TOKENS.percent:
                 this.parseStatement(token);
                 break;
 
-            case 'MULTILINE_COMMENT':
-            case 'COMMENT':
+            case TOKENS.multilineComment:
+            case TOKENS.comment:
                 this.parseComment(token);
                 break;
 
@@ -209,40 +210,40 @@ class Parser {
 
         let child;
         while(child = this.nextToken()) {
-            if(child.type === 'WHITESPACE') {
+            if(child.type === TOKENS.whitespace) {
                 atRule.between = child.lexeme;
             } else if (
-                child.type === 'STRING'     ||
-                child.type === 'HASH'       ||
-                child.type === 'DOLLAR'     ||
-                child.type === 'PERCENT'    ||
-                child.type === 'DASH'       ||
-                child.type === 'UNDERSCORE' ||
-                child.type === 'PLUS'       ||
-                child.type === 'PERIOD'     ||
-                child.type === 'COLON'      ||
-                child.type === 'COMMA'      ||
-                child.type === 'WORD'       ||
-                child.type == 'OPEN_PAREN'  ||
-                child.type == 'CLOSE_PAREN'
+                child.type === TOKENS.string     ||
+                child.type === TOKENS.hash       ||
+                child.type === TOKENS.dollar     ||
+                child.type === TOKENS.percent    ||
+                child.type === TOKENS.dash       ||
+                child.type === TOKENS.underscore ||
+                child.type === TOKENS.plus       ||
+                child.type === TOKENS.period     ||
+                child.type === TOKENS.colon      ||
+                child.type === TOKENS.comma      ||
+                child.type === TOKENS.word       ||
+                child.type === TOKENS.openParen  ||
+                child.type === TOKENS.closeParen
             ) {
                 // Handle interpolation... e.g. #{$variable}
-                if(child.type === 'HASH' && this.peek().type === 'OPEN_CURLY') {
+                if(child.type === TOKENS.hash && this.peek().type === TOKENS.openCurlyBracket) {
                     atRule.value += this.readInterpolation(child);
                 } else {
                     atRule.value += child.lexeme;
                 }
-            } else if(child.type === 'AT') {
+            } else if(child.type === TOKENS.atSymbol) {
                 this.setParent(atRule);
                 this.parseAtRule(child);
                 this.unsetParent();
                 break;
-            } else if(child.type === 'OPEN_CURLY') {
+            } else if(child.type === TOKENS.openCurlyBracket) {
                 this.setParent(atRule);
                 this.parseBlock(child);
                 this.unsetParent();
                 break;
-            } else if (child.type === 'SEMICOLON') {
+            } else if (child.type === TOKENS.semicolon) {
                 atRule.after += ';';
                 break;
             } else {
@@ -263,7 +264,7 @@ class Parser {
             text += next.lexeme;
 
             // On the next closing curly bracket, leave the interpolation.
-            if(next.type === 'CLOSE_CURLY') {
+            if(next.type === TOKENS.closeCurlyBracket) {
                 break;
             }
         }
@@ -279,22 +280,22 @@ class Parser {
         let text = '';
 
         do {
-            if(token.type === 'OPEN_CURLY') {
+            if(token.type === TOKENS.openCurlyBracket) {
                 // We're entering a block, so this must be a rule.
                 this.parseRuleset(token, token, text);
                 break;
-            } else if (token.type === 'HASH') {
+            } else if (token.type === TOKENS.hash) {
                 // We found a hash, which might be either an ID or interpolation...
-                if(this.peek().type === 'OPEN_CURLY') {
+                if(this.peek().type === TOKENS.openCurlyBracket) {
                     text += this.readInterpolation(token);
                 } else {
                     text += token.lexeme;
                 }
-            } else if (token.type === 'SEMICOLON') {
+            } else if (token.type === TOKENS.semicolon) {
                 // We found a semicolon, so this must be a declaration.
                 this.parseDeclaration(token, text);
                 break;
-            } else if (token.type === 'CLOSE_CURLY' && text.length) {
+            } else if (token.type === TOKENS.closeCurlyBracket && text.length) {
                 // We found a closing curly with an unterminated declaration before it
                 this.parseDeclaration(token, text, false);
                 break;
@@ -325,6 +326,7 @@ class Parser {
      * Parse a declaration "property: value;"
      * @param token
      * @param text
+     * @param terminated
      */
     parseDeclaration(token, text, terminated = true) {
         let separator = text.indexOf(':');
@@ -351,9 +353,9 @@ class Parser {
 
         let child;
         while(child = this.nextToken()) {
-            if(child.type === 'CLOSE_CURLY') {
+            if(child.type === TOKENS.closeCurlyBracket) {
                 break;
-            } else if(child.type === 'OPEN_CURLY') {
+            } else if(child.type === TOKENS.openCurlyBracket) {
                 this.parseBlock(child);
             } else {
                 this.parseToken(child);
