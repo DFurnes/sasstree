@@ -115,6 +115,7 @@ class Parser {
             case 'HASH':
             case 'WORD':
             case 'DASH':
+            case 'OPEN_BRACKET':
                 this.parseStatement(token);
                 break;
 
@@ -269,34 +270,32 @@ class Parser {
      * @TODO Is this the right terminology? Should this exist in AST?
      */
     parseStatement(token) {
-        this.prevToken();
         let text = '';
 
-        let next;
-        while (next = this.nextToken()) {
-            if(next.type === 'OPEN_CURLY') {
+        do {
+            if(token.type === 'OPEN_CURLY') {
                 // We're entering a block, so this must be a rule.
-                this.parseRuleset(token, next, text);
+                this.parseRuleset(token, token, text);
                 break;
-            } else if (next.type === 'HASH') {
+            } else if (token.type === 'HASH') {
                 // We found a hash, which might be either an ID or interpolation...
                 if(this.peek().type === 'OPEN_CURLY') {
                     text += this.readInterpolation(token);
                 } else {
-                    text += next.lexeme;
+                    text += token.lexeme;
                 }
-            } else if (next.type === 'SEMICOLON') {
+            } else if (token.type === 'SEMICOLON') {
                 // We found a semicolon, so this must be a declaration.
                 this.parseDeclaration(token, text);
                 break;
-            } else if (next.type === 'CLOSE_CURLY' && text.length) {
+            } else if (token.type === 'CLOSE_CURLY' && text.length) {
                 // We found a closing curly with an unterminated declaration before it
                 this.parseDeclaration(token, text, false);
                 break;
             } else {
-                text += next.lexeme;
+                text += token.lexeme;
             }
-        }
+        } while (token = this.nextToken());
     }
 
     /**

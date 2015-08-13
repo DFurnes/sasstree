@@ -74,6 +74,40 @@ test('Parser - strings and numbers', function(t) {
     t.equals(declaration.value, ' #0af', 'reads hexadecimal value');
 });
 
+test('Parser - selectors', function(t) {
+    t.plan(5);
+
+    let parser = new Parser();
+    let ast = parser.parse(raw`.test { display: none; }  `);
+
+    let ruleset = ast.find('Ruleset')[0];
+    t.equals(ruleset.selector, '.test ', 'reads class selector');
+
+    parser = new Parser();
+    ast = parser.parse(raw`.class.is-selected { background: #f00; }  `);
+
+    ruleset = ast.find('Ruleset')[0];
+    t.equals(ruleset.selector, '.class.is-selected ', 'reads compound selector');
+
+    parser = new Parser();
+    ast = parser.parse(raw`#id { display: block; }  `);
+
+    ruleset = ast.find('Ruleset')[0];
+    t.equals(ruleset.selector, '#id ', 'reads ID selector');
+
+    parser = new Parser();
+    ast = parser.parse(raw`[hidden] { display: none; }  `);
+
+    ruleset = ast.find('Ruleset')[0];
+    t.equals(ruleset.selector, '[hidden] ', 'reads attribute selector');
+
+    parser = new Parser();
+    ast = parser.parse(raw`.class > .direct-child { display: inline; }  `);
+
+    ruleset = ast.find('Ruleset')[0];
+    t.equals(ruleset.selector, '.class > .direct-child ', 'reads child selector');
+});
+
 test('Parser - declarations', function(t) {
     t.plan(1);
 
