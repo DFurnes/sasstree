@@ -93,6 +93,10 @@ class Parser {
         return this.tokens[this.pos + 1];
     }
 
+    expect(type) {
+        return this.peek().type === type;
+    }
+
     prevToken() {
         if(this.pos === 0) return false;
         this.pos--;
